@@ -1,17 +1,24 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div ref="swagger"></div>
   </div>
 </template>
 
 <script>
+import SwaggerUI from 'swagger-ui'
+import 'swagger-ui/dist/swagger-ui.css'
 import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+  mounted () {
+    SwaggerUI({
+      domNode: this.$refs.swagger,
+      url: 'http://localhost:3000/files/swagger.json'
+    })
   }
 }
 </script>
