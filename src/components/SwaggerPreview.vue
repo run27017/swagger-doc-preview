@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import SwaggerUI from 'swagger-ui'
 import 'swagger-ui/dist/swagger-ui.css'
 
@@ -19,15 +18,14 @@ export default {
   },
   mounted () {
     this.swagger = SwaggerUI({
-      domNode: this.$refs.swagger,
-      url: this.url
+      domNode: this.$refs.swagger
     })
-    setInterval(this.reload, 1000)
+    setInterval(this.reload, 1000) // TODO: 需要及时清理
   },
   methods: {
     async reload () {
-      const response = await axios.get(this.url)
-      const spec = JSON.stringify(response.data)
+      const spec = await fetch(this.url).then(response => response.text())
+
       if (spec !== this.spec) {
         this.spec = spec
         this.swagger.specActions.updateSpec(spec)
