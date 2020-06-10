@@ -1,19 +1,21 @@
 # swagger-doc-preview
 
-## Project setup
+> 实时预览 Swagger 文档
+
+## 项目设置
+
+## 安装依赖
+
 ```
-yarn install
+yarn
 ```
 
-### Compiles and hot-reloads for development
+### 开发
 ```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
+yarn run serve
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 部署
+```
+yarn run build
+```
