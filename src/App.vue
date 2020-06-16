@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <div class="header">
-      <el-input placeholder="输入 URL，回车确认" v-model="urlTyping" @change="onChange">
-        <el-button slot="append">Go</el-button>
-      </el-input>
+      <el-form status-icon :show-message="false" @submit.native.prevent="onSubmit">
+        <el-form-item :error="urlTypingError">
+          <el-input placeholder="输入 URL，回车确认" v-model="urlTyping"></el-input>
+        </el-form-item>
+      </el-form>
       <el-link href="https://gitee.com/run27017/swagger-doc-preview/issues" target="_blank" class="issues">提交反馈</el-link>
     </div>
     <div class="main">
@@ -23,12 +25,19 @@ export default {
   data () {
     return {
       urlTyping: '',
-      url: ''
+      urlTypingError: '',
+      url: '',
+      r: new RegExp('^(?:[a-z]+:)?//', 'i')
     }
   },
   methods: {
-    onChange (url) {
-      this.url = this.urlTyping
+    onSubmit () {
+      if (this.urlTyping && !this.r.test(this.urlTyping)) {
+        this.urlTypingError = '需要输入完整的 URL'
+      } else {
+        this.url = this.urlTyping
+        this.urlTypingError = ''
+      }
     }
   }
 }
@@ -49,6 +58,7 @@ export default {
 .issues {
   line-height: 40px;
   position: absolute;
+  top: 0;
   right: 20px;
 }
 </style>
