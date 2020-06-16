@@ -6,10 +6,15 @@
           <el-input placeholder="输入 URL，回车确认" v-model="urlTyping"></el-input>
         </el-form-item>
       </el-form>
-      <el-link href="https://gitee.com/run27017/swagger-doc-preview/issues" target="_blank" class="issues">提交反馈</el-link>
+      <div class="header-right">
+        <el-tooltip content="设置刷新间隔，单位为秒。如果设置为 0，则停止刷新，此时可以使用快捷键“R”手动刷新。">
+          <el-input-number v-model="interval" controls-position="right" size="small" :min="0" :max="5" class="number"></el-input-number>
+        </el-tooltip>
+        <el-link href="https://gitee.com/run27017/swagger-doc-preview/issues" target="_blank">提交反馈</el-link>
+      </div>
     </div>
     <div class="main">
-      <SwaggerPreview :url="url" v-if="url" />
+      <SwaggerPreview ref="swaggerPreview" :url="url" :interval="interval" v-if="url" />
     </div>
   </div>
 </template>
@@ -27,7 +32,8 @@ export default {
       urlTyping: '',
       urlTypingError: '',
       url: '',
-      r: new RegExp('^(?:[a-z]+:)?//', 'i')
+      r: new RegExp('^(?:[a-z]+:)?//', 'i'),
+      interval: 1
     }
   },
   mounted () {
@@ -35,6 +41,12 @@ export default {
       this.urlTyping = this.$route.query.url
       this.onSubmit()
     }
+
+    document.addEventListener('keyup', e => {
+      if (e.target == document.body && e.key === 'r') {
+        this.$refs.swaggerPreview.reload()
+      }
+    })
   },
   methods: {
     onSubmit () {
@@ -43,7 +55,9 @@ export default {
       } else {
         this.url = this.urlTyping
         this.urlTypingError = ''
-        this.$router.push({ query: { url: this.url }})
+        if (this.$route.query.url !== this.url) {
+          this.$router.replace({ query: { url: this.url }})
+        }
       }
     }
   }
@@ -62,7 +76,15 @@ export default {
   overflow-y: auto;
 }
 
-.issues {
+.header-right {
+  > * {
+    margin: 5px;
+  }
+
+  .number {
+    width: 80px;
+  }
+
   line-height: 40px;
   position: absolute;
   top: 0;

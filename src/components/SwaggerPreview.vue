@@ -9,18 +9,42 @@ import 'swagger-ui/dist/swagger-ui.css'
 export default {
   name: 'SwaggerPreview',
   props: {
-    url: String
+    url: String,
+    interval: {
+      type: Number,
+      default: 1
+    }
   },
   data () {
     return {
-      spec: ''
+      spec: '',
+      intervalId: null
+    }
+  },
+  watch: {
+    interval: {
+      handler () {
+        if (this.intervalId) {
+          clearInterval(this.intervalId)
+          this.intervalId = null
+        }
+        if (this.interval > 0) {
+          this.intervalId = setInterval(this.reload, this.interval * 1000)
+        }
+      },
+      immediate: true // 这里尚不清楚 watch 和 mouted 的执行顺序
     }
   },
   mounted () {
     this.swagger = SwaggerUI({
       domNode: this.$refs.swagger
     })
-    setInterval(this.reload, 1000) // TODO: 需要及时清理
+  },
+  beforeDestroy () {
+    if (this.intervalId) {
+      clearInterval(this.intervalId)
+      this.intervalId = null
+    }
   },
   methods: {
     async reload () {
