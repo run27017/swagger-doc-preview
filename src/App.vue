@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="header">
-      <el-form status-icon :show-message="false" @submit.native.prevent="onSubmit">
+      <el-form ref="urlForm" status-icon :show-message="false" @submit.native.prevent="onSubmit">
         <el-form-item :error="urlTypingError">
           <el-input placeholder="输入 URL，回车确认" v-model="urlTyping"></el-input>
         </el-form-item>
@@ -30,6 +30,12 @@ export default {
       r: new RegExp('^(?:[a-z]+:)?//', 'i')
     }
   },
+  mounted () {
+    if (this.$route.query.url) {
+      this.urlTyping = this.$route.query.url
+      this.onSubmit()
+    }
+  },
   methods: {
     onSubmit () {
       if (this.urlTyping && !this.r.test(this.urlTyping)) {
@@ -37,6 +43,7 @@ export default {
       } else {
         this.url = this.urlTyping
         this.urlTypingError = ''
+        this.$router.push({ query: { url: this.url }})
       }
     }
   }
