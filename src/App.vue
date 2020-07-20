@@ -43,10 +43,10 @@ export default {
       url: '',
       r: new RegExp('^(?:[a-z]+:)?//', 'i'),
       interval: 1,
-      history: history
+      history: null
     }
   },
-  mounted () {
+  async mounted () {
     if (this.$route.query.url) {
       this.urlTyping = this.$route.query.url
       this.onSubmit()
@@ -57,6 +57,9 @@ export default {
         this.$refs.swaggerPreview.reload()
       }
     })
+
+    await history.prepare()
+    this.history = history
   },
   methods: {
     onSubmit () {
