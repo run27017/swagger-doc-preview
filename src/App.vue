@@ -71,6 +71,7 @@ export default {
       this.url = url
       if (this.$route.query.url !== url) {
         this.$router.replace({ query: { url }})
+        this.history.push(url)
       }
     }
   }

@@ -1,12 +1,10 @@
-export default [
-  'http://localhost:9292/swagger_doc',
-  'http://localhost:3000/files/swagger.json',
-  'http://localhost:9292/swagger_doc',
-  'http://localhost:9292/swagger_doc',
-  'http://localhost:9292/swagger_doc',
-  'http://localhost:9292/swagger_doc',
-  'http://localhost:3000/files/swagger.json',
-  'http://localhost:3000/files/swagger.json',
-  'http://localhost:3000/files/swagger.json',
-  'http://localhost:3000/files/swagger.json',
-]
+const history = []
+
+export default {
+  push (url) {
+    history.push(url)
+  },
+  *[Symbol.iterator] () {
+    yield* history.slice().reverse()
+  }
+}
