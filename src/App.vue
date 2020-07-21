@@ -1,9 +1,16 @@
 <template>
   <div id="app">
     <el-container>
-      <el-aside class="aside">
-        <h2>历史记录</h2>
-        <el-link v-for="url, index in history" :key="index" @click="changeURL(url)">{{ url }}</el-link>
+      <el-aside width="350px" class="aside">
+        <div class="wrapper">
+          <h2>历史记录</h2>
+          <el-link v-for="(url, index) in history" :key="index" @click="changeURL(url)" class="history-link">
+            <div class="link-wrapper">
+              <span class="point">·</span>
+              <span>{{ url }}</span>
+            </div>
+          </el-link>
+        </div>
       </el-aside>
       <el-container>
         <el-header class="header">
@@ -83,15 +90,50 @@ export default {
 
 <style lang="scss" scoped>
 .aside {
-  word-break: break-all;
-  font-size: 1.2em;
-  margin: 14px;
+  min-height: 100vh;
+  box-shadow: 0 2px 25px 3px #616161;
+  .wrapper {
+    width: inherit;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    word-break: break-all;
+    h2 {
+      margin: 5px 14px;
+    }
+    .history-link {
+      display: block;
+      font-size: 1em;
+      padding: 5px 14px;
+      color: #535353;
+      transition: all .2s ease;
+      line-height: 1em;
+      &:hover {
+        background-color: #dadada;
+      }
+      .link-wrapper {
+        display: flex;
+        align-items: center;
+        .point {
+          width: 20px;
+          font-size: 2em;
+          font-weight: 700;
+          vertical-align: bottom;
+          color: #83e620;
+        }
+      }
+    }
+  }
 }
 
 .header {
   max-width: 800px;
   height: 40px;
   margin: auto;
+  .el-input {
+    width: 719px;
+  }
 }
 
 .header-right {
@@ -113,6 +155,13 @@ export default {
   height: calc(100vh - 40px);
   overflow-y: auto;
 }
+
+@media (max-width: 1240px) {
+  .aside {
+    display: none;
+  }
+}
+
 </style>
 
 <style lang="scss">
