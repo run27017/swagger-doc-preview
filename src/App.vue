@@ -2,11 +2,10 @@
   <div id="app">
     <el-container>
       <el-aside width="350px" class="aside">
-        <div class="wrapper">
+        <div class="aside-wrapper">
           <h2>历史记录</h2>
           <el-link v-for="(url, index) in history" :key="index" @click="changeURL(url)" class="history-link">
             <div class="link-wrapper">
-              <span class="point">·</span>
               <span>{{ url }}</span>
             </div>
           </el-link>
@@ -92,7 +91,7 @@ export default {
 .aside {
   min-height: 100vh;
   box-shadow: 0 2px 25px 3px #616161;
-  .wrapper {
+  .aside-wrapper {
     width: inherit;
     box-sizing: border-box;
     position: fixed;
@@ -113,15 +112,9 @@ export default {
         background-color: #dadada;
       }
       .link-wrapper {
-        display: flex;
-        align-items: center;
-        .point {
-          width: 20px;
-          font-size: 2em;
-          font-weight: 700;
-          vertical-align: bottom;
-          color: #83e620;
-        }
+        display: list-item;
+        list-style-type: circle;
+        margin-left: 10px;
       }
     }
   }
@@ -161,7 +154,6 @@ export default {
     display: none;
   }
 }
-
 </style>
 
 <style lang="scss">
