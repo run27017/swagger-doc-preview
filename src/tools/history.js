@@ -28,5 +28,22 @@ export default {
   },
   *[Symbol.iterator] () {
     yield* history.slice().reverse()
+  },
+  query (keyword) {
+    const urls = []
+    return new Promise((resolve, reject) => {
+      db.transaction(function (tx) {
+        tx.executeSql('SELECT * FROM history where url like ?', [`%${keyword}%`], function (tx, results) {
+          const len = results.rows.length
+          for (let i = 0; i < len; i++){
+            urls.push(results.rows.item(i).url)
+          }
+
+          resolve(urls)
+        }, function () {
+          console.error('执行查询历史的操作出错', arguments)
+        })
+      })
+    })
   }
 }

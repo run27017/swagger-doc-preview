@@ -15,7 +15,12 @@
         <el-header class="header">
           <el-form ref="urlForm" status-icon :show-message="false" @submit.native.prevent="onSubmit">
             <el-form-item :error="urlTypingError">
-              <el-input placeholder="输入 URL，回车确认" v-model="urlTyping"></el-input>
+              <el-autocomplete 
+                placeholder="输入 URL，回车确认" 
+                v-model="urlTyping" 
+                :fetch-suggestions="queryHistory" 
+                class="input"
+              />
             </el-form-item>
           </el-form>
           <div class="header-right">
@@ -36,6 +41,7 @@
 <script>
 import history from './tools/history'
 import SwaggerPreview from './components/SwaggerPreview'
+window.$history = history
 
 export default {
   name: 'App',
@@ -82,6 +88,13 @@ export default {
         this.$router.replace({ query: { url }})
         this.history.push(url)
       }
+    },
+    queryHistory (inputString, cb) {
+      history.query(inputString).then(urls => cb(
+        urls.map(url => {
+          return { value: url }
+        })
+      ))
     }
   }
 }
@@ -124,8 +137,9 @@ export default {
   max-width: 800px;
   height: 40px;
   margin: auto;
-  .el-input {
-    width: 719px;
+
+  .input {
+    width: 800px;
   }
 }
 
