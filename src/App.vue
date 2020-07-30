@@ -71,7 +71,7 @@ export default {
     })
 
     await history.prepare()
-    this.latestHistory = (await history.query(null, 10000)).reverse()
+    this.latestHistory = await history.query(null, 20)
   },
   methods: {
     onSubmit () {
@@ -87,7 +87,7 @@ export default {
       if (this.$route.query.url !== url) {
         this.$router.replace({ query: { url }})
         await history.push(url)
-        this.latestHistory = (await history.query(null, 10000)).reverse()
+        this.latestHistory = await history.query(null, 20)
       }
     },
     queryHistory (inputString, cb) {

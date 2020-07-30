@@ -5,7 +5,7 @@ export default {
     return new Promise((resolve, reject) => {
       db = openDatabase('swaggerdoc', '1.0', 'Swagger Doc Preview 项目的数据文件', 2 * 1024 * 1024)
       db.transaction(function (tx) { 
-        tx.executeSql('CREATE TABLE IF NOT EXISTS history (url)')
+        tx.executeSql('CREATE TABLE IF NOT EXISTS history (url, updated_at)')
       })
       resolve()
     })
@@ -13,7 +13,7 @@ export default {
   push (url) {
     return new Promise((resolve, reject) => {
       db.transaction(function (tx) {
-        tx.executeSql('INSERT INTO history(url) VALUES (?)', [url], function () {
+        tx.executeSql('INSERT INTO history(url, updated_at) VALUES (?, ?)', [url, new Date()], function () {
           resolve()
         })
       })
@@ -23,10 +23,10 @@ export default {
     const urls = []
     let sql, params
     if (keyword) {
-      sql = 'SELECT * FROM history where url like ? limit ?'
+      sql = 'SELECT * FROM history WHERE url LIKE ? ORDER BY updated_at DESC LIMIT ?'
       params = [`%${keyword}%`, limit]
     } else {
-      sql = 'SELECT * FROM history limit ?'
+      sql = 'SELECT * FROM history ORDER BY updated_at DESC LIMIT ?'
       params = [limit]
     }
     return new Promise((resolve, reject) => {
@@ -38,8 +38,8 @@ export default {
           }
 
           resolve(urls)
-        }, function () {
-          console.error('执行查询历史的操作出错', arguments)
+        }, function (tx, error) {
+          console.error('执行查询历史的操作出错', error)
         })
       })
     })
