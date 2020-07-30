@@ -13,9 +13,23 @@ export default {
   push (url) {
     return new Promise((resolve, reject) => {
       db.transaction(function (tx) {
-        tx.executeSql('INSERT INTO history(url, updated_at) VALUES (?, ?)', [url, new Date()], function () {
-          resolve()
-        })
+        tx.executeSql(
+          'SELECT * FROM history WHERE url = ?', [url], 
+          function (tx, results) {
+            if (results.rows.length > 0) {
+              tx.executeSql('UPDATE history SET updated_at = ? WHERE url = ?', [new Date(), url], function () {
+                resolve()
+              }, console.error)
+            } else {
+              tx.executeSql('INSERT INTO history(url, updated_at) VALUES (?, ?)', [url, new Date()], function () {
+                resolve()
+              }, console.error)
+            }
+          },
+          function (tx, error) {
+            console.error('查询 url 是否存在出错', error)
+          }
+        )
       })
     })
   },
