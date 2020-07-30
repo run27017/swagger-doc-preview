@@ -4,7 +4,7 @@
       <el-aside width="350px" class="aside">
         <div class="aside-wrapper">
           <h2>历史记录</h2>
-          <el-link v-for="(url, index) in history" :key="index" @click="changeURL(url)" class="history-link">
+          <el-link v-for="(url, index) in latestHistory" :key="index" @click="changeURL(url)" class="history-link">
             <div class="link-wrapper">
               <span>{{ url }}</span>
             </div>
@@ -55,7 +55,7 @@ export default {
       url: '',
       r: new RegExp('^(?:[a-z]+:)?//', 'i'),
       interval: 1,
-      history: null
+      latestHistory: []
     }
   },
   async mounted () {
@@ -71,7 +71,7 @@ export default {
     })
 
     await history.prepare()
-    this.history = history
+    this.latestHistory = (await history.query(null, 10000)).reverse()
   },
   methods: {
     onSubmit () {
@@ -82,11 +82,12 @@ export default {
         this.changeURL(this.urlTyping)
       }
     },
-    changeURL (url) {
+    async changeURL (url) {
       this.url = url
       if (this.$route.query.url !== url) {
         this.$router.replace({ query: { url }})
-        this.history.push(url)
+        await history.push(url)
+        this.latestHistory = (await history.query(null, 10000)).reverse()
       }
     },
     queryHistory (inputString, cb) {
