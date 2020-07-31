@@ -1,5 +1,8 @@
 <template>
-  <div ref="swagger"></div>
+  <div>
+    <el-alert :title="errorMessage" type="error" effect="light" :closable="false" v-if="error"></el-alert>
+    <div ref="swagger"></div>
+  </div>
 </template>
 
 <script>
@@ -18,7 +21,13 @@ export default {
   data () {
     return {
       spec: '',
+      error: null,
       intervalId: null
+    }
+  },
+  computed: {
+    errorMessage () {
+      return `从提供的链接获取数据出现 HTTP 错误：${this.error.status} ${this.error.statusText}`
     }
   },
   watch: {
@@ -34,8 +43,11 @@ export default {
       },
       immediate: true // 这里尚不清楚 watch 和 mouted 的执行顺序
     },
-    url () {
-      this.reload()
+    url: {
+      handler () {
+        this.reload()
+      },
+      immediate: true
     }
   },
   mounted () {
@@ -51,11 +63,19 @@ export default {
   },
   methods: {
     async reload () {
-      const spec = await fetch(this.url).then(response => response.text())
-
-      if (spec !== this.spec) {
-        this.spec = spec
-        this.swagger.specActions.updateSpec(spec)
+      const response = await fetch(this.url)
+      if (response.ok) {
+        const spec = await response.text()
+        if (spec !== this.spec) {
+          this.spec = spec
+          this.swagger.specActions.updateSpec(spec)
+        }
+        this.error = null
+      } else {
+        this.error = {
+          status: response.status,
+          statusText: response.statusText
+        }
       }
     }
   }
