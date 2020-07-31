@@ -58,6 +58,11 @@ export default {
       latestHistory: []
     }
   },
+  watch: {
+    interval () {
+      localStorage.interval = this.interval
+    }
+  },
   async mounted () {
     if (this.$route.query.url) {
       this.urlTyping = this.$route.query.url
@@ -72,6 +77,10 @@ export default {
 
     await history.prepare()
     this.latestHistory = await history.query(null, 20)
+
+    if ('interval' in localStorage) {
+      this.interval = parseInt(localStorage['interval'])
+    }
   },
   methods: {
     onSubmit () {
