@@ -33,6 +33,9 @@ export default {
         }
       },
       immediate: true // 这里尚不清楚 watch 和 mouted 的执行顺序
+    },
+    url () {
+      this.reload()
     }
   },
   mounted () {

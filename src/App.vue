@@ -41,7 +41,6 @@
 <script>
 import history from './tools/history'
 import SwaggerPreview from './components/SwaggerPreview'
-window.$history = history
 
 export default {
   name: 'App',
