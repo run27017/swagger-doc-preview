@@ -16,6 +16,9 @@ export default {
     interval: {
       type: Number,
       default: 1
+    },
+    config: {
+      type: Object
     }
   },
   data () {
@@ -43,17 +46,15 @@ export default {
       },
       immediate: true // 这里尚不清楚 watch 和 mouted 的执行顺序
     },
-    url: {
-      handler () {
-        this.reload()
-      },
-      immediate: true
+    url: function () {
+      this.reinit()
+    },
+    config: function () {
+      this.reinit()
     }
   },
   mounted () {
-    this.swagger = SwaggerUI({
-      domNode: this.$refs.swagger
-    })
+    this.reinit()
   },
   beforeDestroy () {
     if (this.intervalId) {
@@ -62,6 +63,13 @@ export default {
     }
   },
   methods: {
+    reinit () {
+      this.swagger = SwaggerUI({
+        url: this.url,
+        domNode: this.$refs.swagger,
+        ...this.config
+      })
+    },
     async reload () {
       const response = await fetch(this.url)
       if (response.ok) {

@@ -24,6 +24,7 @@
             </el-form-item>
           </el-form>
           <div class="header-right">
+            <CustomizeConfig v-model="config" />
             <el-tooltip content="设置刷新间隔，单位为秒。如果设置为 0，则停止刷新，此时可以使用快捷键“R”手动刷新。">
               <el-input-number v-model="interval" controls-position="right" size="small" :min="0" :max="5" class="number"></el-input-number>
             </el-tooltip>
@@ -31,7 +32,7 @@
           </div>
         </el-header>
         <el-main>
-          <SwaggerPreview ref="swaggerPreview" :url="url" :interval="interval" v-if="url" />
+          <SwaggerPreview ref="swaggerPreview" :config="config" :url="url" :interval="interval" v-if="url" />
         </el-main>
       </el-container>
     </el-container>
@@ -41,14 +42,20 @@
 <script>
 import history from './tools/history'
 import SwaggerPreview from './components/SwaggerPreview'
+import CustomizeConfig from './components/CustomizeConfig'
 
 export default {
   name: 'App',
   components: {
-    SwaggerPreview
+    SwaggerPreview,
+    CustomizeConfig
   },
   data () {
-    return {
+    const data = {
+      config: {
+        defaultModelExpandDepth: 2,
+        filter: true
+      },
       urlTyping: '',
       urlTypingError: '',
       url: '',
@@ -56,10 +63,22 @@ export default {
       interval: 1,
       latestHistory: []
     }
+
+    if ('interval' in localStorage) {
+      data.interval = parseInt(localStorage.interval)
+    }
+    if ('config' in localStorage) {
+      data.config = JSON.parse(localStorage.config)
+    }
+
+    return data
   },
   watch: {
     interval () {
       localStorage.interval = this.interval
+    },
+    config () {
+      localStorage.config = JSON.stringify(this.config)
     }
   },
   async mounted () {
@@ -76,10 +95,6 @@ export default {
 
     await history.prepare()
     this.latestHistory = await history.query(null, 20)
-
-    if ('interval' in localStorage) {
-      this.interval = parseInt(localStorage['interval'])
-    }
   },
   methods: {
     onSubmit () {
