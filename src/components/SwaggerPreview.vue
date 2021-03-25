@@ -71,6 +71,9 @@ export default {
       })
     },
     async reload () {
+      // TODO: 这个地方的速度可能有点慢，是否需要一个的提醒
+      this.$emit('loading')
+
       const response = await fetch(this.url)
       if (response.ok) {
         const spec = await response.text()
@@ -85,6 +88,8 @@ export default {
           statusText: response.statusText
         }
       }
+
+      this.$emit('loaded')
     }
   }
 }

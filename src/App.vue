@@ -25,14 +25,12 @@
           </el-form>
           <div class="header-right">
             <CustomizeConfig v-model="config" />
-            <el-tooltip content="设置刷新间隔，单位为秒。如果设置为 0，则停止刷新，此时可以使用快捷键“R”手动刷新。">
-              <el-input-number v-model="interval" controls-position="right" size="small" :min="0" :max="5" class="number"></el-input-number>
-            </el-tooltip>
+            <IntervalSetting v-model="interval" :loading="loading" />
             <el-link href="https://gitee.com/run27017/swagger-doc-preview/issues" target="_blank">提交反馈</el-link>
           </div>
         </el-header>
         <el-main>
-          <SwaggerPreview ref="swaggerPreview" :config="config" :url="url" :interval="interval" v-if="url" />
+          <SwaggerPreview ref="swaggerPreview" :config="config" :url="url" :interval="interval" @loading="loading = true" @loaded="loading = false" v-if="url" />
         </el-main>
       </el-container>
     </el-container>
@@ -43,15 +41,18 @@
 import history from './tools/history'
 import SwaggerPreview from './components/SwaggerPreview'
 import CustomizeConfig from './components/CustomizeConfig'
+import IntervalSetting from './components/IntervalSetting'
 
 export default {
   name: 'App',
   components: {
     SwaggerPreview,
-    CustomizeConfig
+    CustomizeConfig,
+    IntervalSetting
   },
   data () {
     const data = {
+      loading: false,
       config: {
         defaultModelExpandDepth: 2,
         filter: true
@@ -88,6 +89,7 @@ export default {
     }
 
     document.addEventListener('keyup', e => {
+      // 浏览器中已经绑定有大量的 `CTRL` 键
       if (e.target == document.body && e.key === 'r') {
         this.$refs.swaggerPreview.reload()
       }
