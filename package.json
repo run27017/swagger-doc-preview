@@ -1,23 +1,26 @@
 {
   "name": "swagger-doc-preview",
   "version": "0.1.0",
-  "private": true,
+  "description": "A quickly start tool for rendering swagger doc, supporting history and auto refresh.",
+  "main": "./src/App.vue",
+  "author": "Run <run27017@126.com>",
+  "repository": "run27017/swagger-doc-preview",
+  "license": "MIT",
+  "keywords": ["swagger", "swagger-ui", "swagger-doc", "swagger-doc-preview", "render-swagger-doc", "auto-refresh"],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
-  "dependencies": {
-    "core-js": "^3.6.5",
-    "element-ui": "^2.13.2",
-    "swagger-ui": "^3.26.0",
-    "vue": "^2.6.11",
-    "vue-router": "^3.3.4"
-  },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
+    "core-js": "^3.6.5",
+    "element-ui": "^2.13.2",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
+    "swagger-ui": "^3.26.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.3.4",
     "vue-template-compiler": "^2.6.11"
   }
 }
