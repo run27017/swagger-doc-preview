@@ -6,8 +6,7 @@
 </template>
 
 <script>
-import SwaggerUI from 'swagger-ui'
-import 'swagger-ui/dist/swagger-ui.css'
+import SwaggerUIBundle from './SwaggerUIBundle'
 
 export default {
   name: 'SwaggerPreview',
@@ -15,7 +14,7 @@ export default {
     url: String,
     interval: {
       type: Number,
-      default: 1
+      default: 0
     },
     config: {
       type: Object
@@ -64,7 +63,7 @@ export default {
   },
   methods: {
     reinit () {
-      this.swagger = SwaggerUI({
+      this.swagger = SwaggerUIBundle({
         url: this.url,
         domNode: this.$refs.swagger,
         ...this.config
