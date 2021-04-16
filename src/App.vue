@@ -17,7 +17,7 @@
             </el-form-item>
           </el-form>
           <div class="header-right">
-            <CustomizeConfig v-model="config" />
+            <CustomizeConfig ref="customizeConfig" @change="config = $event" />
             <IntervalSetting v-model="interval" :loading="loading" />
             <el-link href="https://gitee.com/run27017/swagger-doc-preview/issues" target="_blank">提交反馈</el-link>
           </div>
@@ -47,10 +47,7 @@ export default {
   data () {
     const data = {
       loading: false,
-      config: {
-        defaultModelExpandDepth: 2,
-        filter: true
-      },
+      config: null,
       urlTyping: '',
       urlTypingError: '',
       url: '',
@@ -61,21 +58,16 @@ export default {
     if ('interval' in localStorage) {
       data.interval = parseInt(localStorage.interval)
     }
-    if ('config' in localStorage) {
-      data.config = JSON.parse(localStorage.config)
-    }
 
     return data
   },
   watch: {
     interval () {
       localStorage.interval = this.interval
-    },
-    config () {
-      localStorage.config = JSON.stringify(this.config)
     }
   },
   async mounted () {
+    this.config = this.$refs.customizeConfig.getConfig()
     if (this.$route.query.url) {
       this.urlTyping = this.$route.query.url
       this.url = this.$route.query.url

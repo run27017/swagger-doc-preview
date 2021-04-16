@@ -2,7 +2,7 @@
   "name": "swagger-doc-preview",
   "version": "0.1.0",
   "description": "A quickly start tool for rendering swagger doc, supporting history and auto refresh.",
-  "main": "./src/App.vue",
+  "main": "./src/index.js",
   "author": "Run <run27017@126.com>",
   "repository": "run27017/swagger-doc-preview",
   "license": "MIT",

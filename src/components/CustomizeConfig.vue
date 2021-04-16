@@ -26,48 +26,57 @@
 </template>
 
 <script>
+const defaultConfigText = JSON.stringify({
+  showErrors: false,
+  filter: true,
+  defaultModelExpandDepth: 2,
+  defaultModelRendering: "model"
+}, null, 2)
+
 export default {
   name: 'CustomizeConfig',
-  model: {
-    prop: 'config',
-    event: 'save'
-  },
-  props: {
-    config: {
-      type: Object
-    }
-  },
   data () {
     return {
       visible: false,
-      editingConfig: ''
+      editingConfig: localStorage.config || defaultConfigText
     }
   },
-  watch: {
-    config: {
-      handler() {
-        this.editingConfig = JSON.stringify(this.config, null, 2)
-      },
-      immediate: true
-    } 
-  },
   methods: {
-    save () {
-      let editingConfigObject
-
-      try {
-        editingConfigObject = JSON.parse(this.editingConfig)
-      } catch (err) {
-        this.$message.error('JSON 语法错误')
-        return
+    getConfig () {
+      if ('config' in localStorage) {
+        try {
+          return JSON.parse(localStorage.config)
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            return JSON.parse(defaultConfigText)
+          } else {
+            throw e
+          }
+        }
+      } else {
+        return JSON.parse(defaultConfigText)
       }
+    },
+    save () {
+      try {
+        const config = JSON.parse(this.editingConfig)
+        this.$emit('change', config)
 
-      this.$emit('save', editingConfigObject)
-      this.visible = false
+        localStorage.config = this.editingConfig
+
+        this.visible = false
+      } catch (e) {
+        if (e instanceof SyntaxError) {
+          this.$message.error('JSON 格式错误!')
+          return
+        } else {
+          throw e
+        }
+      }
     },
     cancel () {
       this.visible = false
-      this.editingConfig = JSON.stringify(this.config, null, 2)
+      this.editingConfig = localStorage.config || defaultConfigText
     }
   }
 }
