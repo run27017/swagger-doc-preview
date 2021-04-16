@@ -2,14 +2,7 @@
   <div id="app">
     <el-container>
       <el-aside width="350px" class="aside">
-        <div class="aside-wrapper">
-          <h2>历史记录</h2>
-          <el-link v-for="(url, index) in latestHistory" :key="index" @click="changeURL(url)" class="history-link">
-            <div class="link-wrapper">
-              <span>{{ url }}</span>
-            </div>
-          </el-link>
-        </div>
+        <HistoryPanel ref="historyPanel" @clickLink="changeURL" />
       </el-aside>
       <el-container>
         <el-header class="header">
@@ -38,17 +31,18 @@
 </template>
 
 <script>
-import history from './tools/history'
-import SwaggerPreview from './components/SwaggerPreview'
+import HistoryPanel from './components/HistoryPanel'
 import CustomizeConfig from './components/CustomizeConfig'
 import IntervalSetting from './components/IntervalSetting'
+import SwaggerPreview from './components/SwaggerPreview'
 
 export default {
   name: 'App',
   components: {
-    SwaggerPreview,
+    HistoryPanel,
     CustomizeConfig,
-    IntervalSetting
+    IntervalSetting,
+    SwaggerPreview
   },
   data () {
     const data = {
@@ -61,8 +55,7 @@ export default {
       urlTypingError: '',
       url: '',
       r: new RegExp('^(?:[a-z]+:)?//', 'i'),
-      interval: 1,
-      latestHistory: []
+      interval: 1
     }
 
     if ('interval' in localStorage) {
@@ -85,6 +78,7 @@ export default {
   async mounted () {
     if (this.$route.query.url) {
       this.urlTyping = this.$route.query.url
+      this.url = this.$route.query.url
       this.onSubmit()
     }
 
@@ -94,9 +88,6 @@ export default {
         this.$refs.swaggerPreview.reload()
       }
     })
-
-    await history.prepare()
-    this.latestHistory = await history.query(null, 20)
   },
   methods: {
     onSubmit () {
@@ -104,19 +95,21 @@ export default {
         this.urlTypingError = '需要输入完整的 URL'
       } else {
         this.urlTypingError = ''
-        this.changeURL(this.urlTyping)
+        this.changeURL(this.urlTyping, true)
       }
     },
-    async changeURL (url) {
+    async changeURL (url, pushState = false) {
+      if (this.url === url) return
+
       this.url = url
-      if (this.$route.query.url !== url) {
-        this.$router.replace({ query: { url }})
-        await history.push(url)
-        this.latestHistory = await history.query(null, 20)
+      this.urlTyping = url
+      this.$router.replace({ query: { url }})
+      if (pushState) {
+        await this.$refs.historyPanel.push(url)
       }
     },
     queryHistory (inputString, cb) {
-      history.query(inputString).then(urls => cb(
+      this.$refs.historyPanel.query(inputString).then(urls => cb(
         urls.map(url => {
           return { value: url }
         })
@@ -130,33 +123,6 @@ export default {
 .aside {
   min-height: 100vh;
   box-shadow: 0 2px 25px 3px #616161;
-  .aside-wrapper {
-    width: inherit;
-    box-sizing: border-box;
-    position: fixed;
-    top: 0;
-    left: 0;
-    word-break: break-all;
-    h2 {
-      margin: 5px 14px;
-    }
-    .history-link {
-      display: block;
-      font-size: 1em;
-      padding: 5px 14px;
-      color: #535353;
-      transition: all .2s ease;
-      line-height: 1em;
-      &:hover {
-        background-color: #dadada;
-      }
-      .link-wrapper {
-        display: list-item;
-        list-style-type: circle;
-        margin-left: 10px;
-      }
-    }
-  }
 }
 
 .header {
