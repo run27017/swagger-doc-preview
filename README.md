@@ -72,8 +72,6 @@ $ yarn run build
 
 `SwaggerDocPreview` 是一个集历史列表、配置于一体的完整组件，其中的零部件可以单独引入。例如可单独引入 `CustomizeConfig`组件：
 
-### `CustomizeConfig`
-
 ```vue
 <template>
   <CustomizeConfig ref="customizeConfig" @change="onConfigChange" />

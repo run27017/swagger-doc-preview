@@ -19,6 +19,7 @@ function createSendFileRoute(routeName) {
 const routes = [
   createSendFileRoute('simple'),
   createSendFileRoute('petstore'),
+  createSendFileRoute('error'),
   {
     path: '/',
     handler (data, request, response) {

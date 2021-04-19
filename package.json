@@ -7,6 +7,11 @@
   "repository": "run27017/swagger-doc-preview",
   "license": "MIT",
   "keywords": ["swagger", "swagger-ui", "swagger-doc", "swagger-doc-preview", "render-swagger-doc", "auto-refresh"],
+  "files": [
+    "README.md",
+    "package.json",
+    "lib"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
