@@ -36,6 +36,8 @@ import CustomizeConfig from './CustomizeConfig'
 import IntervalSetting from './IntervalSetting'
 import SwaggerPreview from './SwaggerPreview'
 
+const INTERVAL_STORE_KEY = 'swagger-doc-preview_interval'
+
 export default {
   name: 'App',
   components: {
@@ -55,15 +57,15 @@ export default {
       interval: 1
     }
 
-    if ('interval' in localStorage) {
-      data.interval = parseInt(localStorage.interval)
+    if (INTERVAL_STORE_KEY in localStorage) {
+      data.interval = parseInt(localStorage[INTERVAL_STORE_KEY])
     }
 
     return data
   },
   watch: {
     interval () {
-      localStorage.interval = this.interval
+      localStorage[INTERVAL_STORE_KEY] = this.interval
     }
   },
   async mounted () {
