@@ -93,6 +93,24 @@ export default {
 </script>
 ```
 
+### `CustomizeConfig`
+
+通过一个按钮打开一个 JSON 格式的配置项编辑框，支持 Swagger UI 原生配置项，参考文档 [Swagger UI Configuration](https://github.com/swagger-api/swagger-ui/blob/master/docs/usage/configuration.md). 在原生配置项之外增加一个 `showErrors` 键，设置为 `true` 可在 Swagger 文档有错误时显示错误信息。
+
+```vue
+<template>
+  <CustomizeConfig ref="customizeConfig" @change="onConfigChange" />
+</template>
+```
+
+### `SwaggerUIBundle`
+
+一个封装过的 `SwaggerUI` 构造函数，在原生构造函数的基础上增加了 `showErrors` 选项。
+
+### `SwaggerEditorBundle`
+
+一个封装过的 `SwaggerUI` 构造函数，在原生组件的基础上删除了自动保存到 localStorage 的能力。
+
 ## License
 
 MIT
