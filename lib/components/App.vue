@@ -31,10 +31,10 @@
 </template>
 
 <script>
-import HistoryPanel from './components/HistoryPanel'
-import CustomizeConfig from './components/CustomizeConfig'
-import IntervalSetting from './components/IntervalSetting'
-import SwaggerPreview from './components/SwaggerPreview'
+import HistoryPanel from './HistoryPanel'
+import CustomizeConfig from './CustomizeConfig'
+import IntervalSetting from './IntervalSetting'
+import SwaggerPreview from './SwaggerPreview'
 
 export default {
   name: 'App',
