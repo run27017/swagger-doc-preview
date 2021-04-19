@@ -1,6 +1,6 @@
 {
   "name": "swagger-doc-preview",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A quickly start tool for rendering swagger doc, supporting history and auto refresh.",
   "main": "./lib/index.js",
   "author": "Run <run27017@126.com>",
